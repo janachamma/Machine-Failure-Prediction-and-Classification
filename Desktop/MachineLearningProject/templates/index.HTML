@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Failure Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Machine Failure Prediction System</h1>
+        <form method="post">
+            <div class="form-group">
+                <label for="product_quality">Product Quality Type:</label>
+                <select class="form-control" name="product_quality" id="product_quality">
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="H">H</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="air_temperature">Air Temperature:</label>
+                <input class="form-control" type="text" name="air_temperature" id="air_temperature">
+            </div>
+            <div class="form-group">
+                <label for="process_temperature">Process Temperature:</label>
+                <input class="form-control" type="text" name="process_temperature" id="process_temperature">
+            </div>
+            <div class="form-group">
+                <label for="rotational_speed">Rotational Speed:</label>
+                <input class="form-control" type="text" name="rotational_speed" id="rotational_speed">
+            </div>
+            <div class="form-group">
+                <label for="torque">Torque:</label>
+                <input class="form-control" type="text" name="torque" id="torque">
+            </div>
+            <div class="form-group">
+                <label for="tool_wear">Tool Wear:</label>
+                <input class="form-control" type="text" name="tool_wear" id="tool_wear">
+            </div>
+            <button type="submit" class="btn btn-primary">Predict</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if ('error' in data) {
+                document.getElementById('result').innerHTML = data.error;
+            } else {
+                document.getElementById('result').innerHTML = `The predicted machine failure type according to your query is '${data.predicted_label}' with a probability of ${data.predicted_prob.toFixed(2)} and a prediction time of ${data.prediction_time.toFixed(4)} seconds.`;
+            }
+        });
+    </script>
+</body>
+</html>
